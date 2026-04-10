@@ -2,89 +2,94 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Trophy, Star, CheckCircle } from "lucide-react";
+import { Trophy, TrendingUp, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { achievements } from "@/lib/data";
 
-const colorMap: Record<string, { border: string; icon: string; bg: string }> = {
-  blue: {
-    border: "border-t-blue-500",
-    icon: "text-blue-500 bg-blue-50 dark:bg-blue-500/10",
-    bg: "from-blue-500/5",
-  },
-  green: {
-    border: "border-t-green-500",
-    icon: "text-green-500 bg-green-50 dark:bg-green-500/10",
-    bg: "from-green-500/5",
-  },
-  purple: {
-    border: "border-t-purple-500",
-    icon: "text-purple-500 bg-purple-50 dark:bg-purple-500/10",
-    bg: "from-purple-500/5",
-  },
-};
+const accentColors = [
+  { line: "#06b6d4", glow: "rgba(6,182,212,0.12)", iconBg: "rgba(6,182,212,0.1)", iconColor: "#06b6d4" },
+  { line: "#f59e0b", glow: "rgba(245,158,11,0.12)", iconBg: "rgba(245,158,11,0.1)", iconColor: "#f59e0b" },
+  { line: "#06b6d4", glow: "rgba(6,182,212,0.12)", iconBg: "rgba(6,182,212,0.1)", iconColor: "#06b6d4" },
+];
 
-const icons = [Trophy, Star, Trophy];
+const icons = [Trophy, TrendingUp, Trophy];
 
 export default function AchievementsSection() {
   const { t } = useLanguage();
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section
-      id="achievements"
-      ref={ref}
-      className="py-24 bg-white dark:bg-slate-900"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="achievements" ref={ref} className="py-24 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          className="mb-16 relative"
+          initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.5 }}
         >
-          <span className="inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-500/10 rounded-full mb-4">
-            {t("ach_subtitle")}
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-white">
+          <span className="absolute -top-6 right-0 section-number" aria-hidden>04</span>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-8 h-[2px] bg-amber-500 rounded" />
+            <span className="text-xs font-semibold text-amber-500 uppercase tracking-[0.2em]">
+              {t("ach_subtitle")}
+            </span>
+          </div>
+          <h2
+            className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white"
+            style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+          >
             {t("ach_title")}
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {achievements.map((ach, i) => {
-            const colors = colorMap[ach.color] ?? colorMap.blue;
+            const accent = accentColors[i % accentColors.length];
             const Icon = icons[i] ?? Trophy;
 
             return (
               <motion.div
                 key={ach.title}
-                initial={{ opacity: 0, y: 40 }}
+                className="premium-card p-7 flex flex-col group"
+                style={{ borderLeft: `3px solid ${accent.line}` }}
+                initial={{ opacity: 0, y: 36 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                className={`bg-white/80 dark:bg-slate-800/70 backdrop-blur-xl border border-gray-200/50 dark:border-white/5 rounded-2xl border-t-4 ${colors.border} p-8 hover:shadow-lg transition-shadow`}
+                transition={{ duration: 0.55, delay: i * 0.13 }}
               >
-                {/* Icon */}
-                <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 ${colors.icon}`}
-                >
-                  <Icon className="w-6 h-6" />
+                {/* Icon + number */}
+                <div className="flex items-start justify-between mb-5">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                    style={{ background: accent.iconBg }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: accent.iconColor }} />
+                  </div>
+                  <span
+                    className="text-4xl font-extrabold opacity-10 group-hover:opacity-20 transition-opacity"
+                    style={{
+                      fontFamily: "var(--font-syne, Syne, sans-serif)",
+                      color: accent.line,
+                    }}
+                  >
+                    0{i + 1}
+                  </span>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-3">
+                <h3
+                  className="text-base font-bold text-slate-900 dark:text-white mb-2"
+                  style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+                >
                   {ach.title}
                 </h3>
-
-                {/* Action */}
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5 flex-1">
                   {ach.action}
                 </p>
 
-                {/* Result */}
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                {/* Result badge */}
+                <div className="flex items-start gap-2 pt-4 border-t border-slate-100 dark:border-white/6">
+                  <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     {ach.result}
                   </p>

@@ -12,25 +12,43 @@ const iconMap: Record<string, LucideIcon> = {
   Zap,
 };
 
+const accentColors = [
+  { border: "#06b6d4", glow: "rgba(6, 182, 212, 0.15)", icon: "rgba(6, 182, 212, 0.1)", text: "#06b6d4" },
+  { border: "#f59e0b", glow: "rgba(245, 158, 11, 0.15)", icon: "rgba(245, 158, 11, 0.1)", text: "#f59e0b" },
+  { border: "#06b6d4", glow: "rgba(6, 182, 212, 0.15)", icon: "rgba(6, 182, 212, 0.1)", text: "#06b6d4" },
+];
+
 export default function ServicesSection() {
   const { t } = useLanguage();
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="services" className="py-20 px-4">
+    <section id="services" className="py-24 px-4">
       <div className="max-w-6xl mx-auto" ref={ref}>
-        {/* Header */}
+        {/* Section header */}
         <motion.div
-          className="text-center mb-14"
+          className="mb-16 relative"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <span className="inline-block px-4 py-1.5 rounded-full text-sm font-medium bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 mb-4">
-            {t("services_subtitle")}
+          <span
+            className="absolute -top-6 right-0 section-number"
+            aria-hidden
+          >
+            01
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-8 h-[2px] bg-cyan-500 rounded" />
+            <span className="text-xs font-semibold text-cyan-500 uppercase tracking-[0.2em]">
+              {t("services_subtitle")}
+            </span>
+          </div>
+          <h2
+            className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white"
+            style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+          >
             {t("services_title")}
           </h2>
         </motion.div>
@@ -39,21 +57,39 @@ export default function ServicesSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {services.map((service, i) => {
             const Icon = iconMap[service.icon] ?? Search;
+            const accent = accentColors[i % accentColors.length];
             return (
               <motion.div
                 key={service.id}
-                className="group bg-white/80 dark:bg-slate-800/70 backdrop-blur-xl border border-gray-200/50 dark:border-white/5 rounded-2xl p-7 transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-500/40"
+                className="premium-card p-7 group"
+                style={{ borderLeft: `3px solid ${accent.border}` }}
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.15 * i }}
+                transition={{ duration: 0.55, delay: 0.12 * i }}
               >
-                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-5">
-                  <Icon className="w-6 h-6 text-cyan-500" />
+                {/* Icon */}
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110"
+                  style={{ background: accent.icon }}
+                >
+                  <Icon className="w-5 h-5" style={{ color: accent.text }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+
+                {/* Number */}
+                <div
+                  className="text-xs font-bold mb-2 tracking-widest"
+                  style={{ color: accent.text, fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+                >
+                  0{i + 1}
+                </div>
+
+                <h3
+                  className="text-base font-bold text-slate-900 dark:text-white mb-2 group-hover:text-cyan-500 transition-colors"
+                  style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+                >
                   {service.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+                <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">
                   {service.desc}
                 </p>
               </motion.div>

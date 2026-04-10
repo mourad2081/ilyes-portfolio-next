@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Syne, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { LanguageProvider } from "@/hooks/use-language";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import ScrollProgress from "@/components/ui/scroll-progress";
 
-const poppins = Poppins({
+const syne = Syne({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
+  weight: ["400", "600", "700", "800"],
+  variable: "--font-syne",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-dm-sans",
 });
 
 export const metadata: Metadata = {
@@ -24,10 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable} h-full`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col antialiased bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+    <html lang="en" className={`${syne.variable} ${dmSans.variable} h-full`} suppressHydrationWarning>
+      <body className="min-h-full flex flex-col antialiased" style={{ fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif" }}>
         <ThemeProvider>
           <LanguageProvider>
+            <ScrollProgress />
             <Header />
             <main className="flex-1 pt-16">{children}</main>
             <Footer />
