@@ -10,7 +10,6 @@ export default function ResumeSection() {
   const { t } = useLanguage();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-
   const [activeTab, setActiveTab] = useState<"exp" | "edu">("exp");
   const [selectedExp, setSelectedExp] = useState<Experience | null>(null);
 
@@ -21,25 +20,30 @@ export default function ResumeSection() {
 
   return (
     <>
-      <section id="resume" className="py-24 px-4">
-        <div className="max-w-4xl mx-auto" ref={ref}>
-          {/* Section header */}
+      <section id="resume" className="py-28 px-4 relative" style={{ background: "var(--bg)" }}>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 50% 50% at 80% 50%, rgba(232,160,32,0.04) 0%, transparent 70%)" }}
+          aria-hidden
+        />
+        <div className="max-w-4xl mx-auto relative" ref={ref}>
+          {/* Header */}
           <motion.div
-            className="mb-14 relative"
-            initial={{ opacity: 0, y: 20 }}
+            className="mb-16 relative"
+            initial={{ opacity: 0, y: 24 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
           >
-            <span className="absolute -top-6 right-0 section-number" aria-hidden>03</span>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-[2px] bg-cyan-500 rounded" />
-              <span className="text-xs font-semibold text-cyan-500 uppercase tracking-[0.2em]">
+            <span className="section-num">03</span>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-[1.5px]" style={{ background: "linear-gradient(90deg, var(--cyan), transparent)" }} />
+              <span className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--cyan)" }}>
                 {t("resume_subtitle")}
               </span>
             </div>
             <h2
-              className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white"
-              style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+              className="text-4xl sm:text-5xl font-bold"
+              style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}
             >
               {t("resume_title")}
             </h2>
@@ -47,7 +51,8 @@ export default function ResumeSection() {
 
           {/* Tab switcher */}
           <motion.div
-            className="flex gap-2 mb-12 p-1.5 bg-slate-100 dark:bg-white/5 rounded-2xl w-fit"
+            className="flex gap-1 p-1 rounded-2xl w-fit mb-14"
+            style={{ background: "rgba(0,212,255,0.04)", border: "1px solid rgba(0,212,255,0.08)" }}
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -59,12 +64,13 @@ export default function ResumeSection() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`relative inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                    isActive
-                      ? "bg-white dark:bg-[#0d1829] text-cyan-500 shadow-md shadow-black/8"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                  }`}
-                  style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+                  className="relative flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                  style={{
+                    color: isActive ? "#fff" : "var(--text-2)",
+                    background: isActive ? "rgba(0,212,255,0.15)" : "transparent",
+                    border: isActive ? "1px solid rgba(0,212,255,0.25)" : "1px solid transparent",
+                    fontFamily: "var(--font-body)",
+                  }}
                 >
                   <Icon className="w-4 h-4" />
                   {tab.label}
@@ -73,58 +79,69 @@ export default function ResumeSection() {
             })}
           </motion.div>
 
-          {/* Tab content */}
           <AnimatePresence mode="wait">
             {activeTab === "exp" ? (
               <motion.div
                 key="exp"
-                initial={{ opacity: 0, x: -16 }}
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 16 }}
+                exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.25 }}
                 className="relative pl-10"
               >
-                {/* Timeline vertical line */}
-                <div className="absolute left-[7px] top-3 bottom-3 w-px bg-gradient-to-b from-cyan-500/60 via-cyan-500/20 to-transparent" />
+                {/* Timeline line */}
+                <div
+                  className="absolute left-[7px] top-4 bottom-4 w-px"
+                  style={{ background: "linear-gradient(180deg, var(--cyan) 0%, rgba(0,212,255,0.1) 80%, transparent 100%)" }}
+                />
 
-                <div className="space-y-8">
+                <div className="space-y-7">
                   {experiences.map((exp, i) => (
                     <motion.div
                       key={exp.id}
                       className="relative group"
                       initial={{ opacity: 0, y: 20 }}
                       animate={inView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.45, delay: 0.12 * i }}
+                      transition={{ duration: 0.5, delay: 0.1 * i }}
                     >
                       {/* Timeline dot */}
-                      <div className="absolute -left-10 top-5 w-3.5 h-3.5 rounded-full bg-cyan-500 border-2 border-white dark:border-[#050c18] shadow-[0_0_0_3px_rgba(6,182,212,0.2)]" />
+                      <div
+                        className="absolute -left-10 top-5 w-3.5 h-3.5 rounded-full"
+                        style={{
+                          background: "var(--bg)",
+                          border: "2px solid var(--cyan)",
+                          boxShadow: "0 0 0 3px rgba(0,212,255,0.1)",
+                        }}
+                      />
 
-                      <div className="premium-card p-6 group-hover:border-cyan-500/30">
-                        {/* Date + expand button */}
+                      <div
+                        className="card-dark rounded-2xl p-6 group-hover:border-cyan-500/20 transition-all"
+                        style={{ borderLeft: "2px solid rgba(0,212,255,0.2)" }}
+                      >
                         <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-1.5 text-xs text-cyan-500 font-medium">
+                          <div className="flex items-center gap-2 text-xs font-medium" style={{ color: "var(--cyan)" }}>
                             <CalendarDays className="w-3.5 h-3.5" />
                             {exp.date}
                           </div>
                           <button
                             onClick={() => setSelectedExp(exp)}
-                            className="flex items-center gap-1 text-xs text-slate-400 hover:text-cyan-500 transition-colors"
+                            className="flex items-center gap-1 text-xs transition-colors"
+                            style={{ color: "var(--text-3)" }}
                           >
-                            {t("btn_read_more")}
-                            <ArrowUpRight className="w-3 h-3" />
+                            {t("btn_read_more")} <ArrowUpRight className="w-3 h-3" />
                           </button>
                         </div>
 
                         <h3
-                          className="text-base font-bold text-slate-900 dark:text-white mb-1"
-                          style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+                          className="text-base font-bold mb-1"
+                          style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}
                         >
                           {exp.role}
                         </h3>
-                        <p className="text-sm text-amber-500 font-medium mb-3">
+                        <p className="text-sm font-medium mb-3" style={{ color: "var(--gold)" }}>
                           {exp.company}
                         </p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
                           {exp.shortDesc}
                         </p>
                       </div>
@@ -135,36 +152,37 @@ export default function ResumeSection() {
             ) : (
               <motion.div
                 key="edu"
-                initial={{ opacity: 0, x: -16 }}
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 16 }}
+                exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.25 }}
                 className="space-y-4"
               >
                 {education.map((edu, i) => (
                   <motion.div
                     key={edu.title}
-                    className="premium-card p-6"
+                    className="card-dark rounded-2xl p-6"
+                    style={{ borderLeft: "2px solid var(--cyan)" }}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.12 * i }}
-                    style={{ borderLeft: "3px solid #06b6d4" }}
+                    transition={{ duration: 0.4, delay: 0.1 * i }}
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center shrink-0">
-                        <GraduationCap className="w-5 h-5 text-cyan-500" />
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: "rgba(0,212,255,0.08)", border: "1px solid rgba(0,212,255,0.12)" }}
+                      >
+                        <GraduationCap className="w-5 h-5" style={{ color: "var(--cyan)" }} />
                       </div>
                       <div>
                         <h3
-                          className="text-base font-bold text-slate-900 dark:text-white mb-0.5"
-                          style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+                          className="text-base font-bold mb-0.5"
+                          style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}
                         >
                           {edu.title}
                         </h3>
                         {edu.institution && (
-                          <p className="text-sm text-slate-500 dark:text-slate-400">
-                            {edu.institution}
-                          </p>
+                          <p className="text-sm" style={{ color: "var(--text-2)" }}>{edu.institution}</p>
                         )}
                       </div>
                     </div>
@@ -176,7 +194,7 @@ export default function ResumeSection() {
         </div>
       </section>
 
-      {/* Experience detail modal */}
+      {/* Detail modal */}
       <AnimatePresence>
         {selectedExp && (
           <motion.div
@@ -186,37 +204,40 @@ export default function ResumeSection() {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0"
+              style={{ background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)" }}
               onClick={() => setSelectedExp(null)}
             />
             <motion.div
-              className="relative z-10 w-full max-w-lg bg-white dark:bg-[#0d1829] border border-slate-200 dark:border-white/8 rounded-2xl p-7 shadow-2xl"
-              initial={{ opacity: 0, scale: 0.94, y: 24 }}
+              className="relative z-10 w-full max-w-lg rounded-2xl p-7"
+              style={{
+                background: "var(--bg-card-2)",
+                border: "1px solid rgba(0,212,255,0.15)",
+                boxShadow: "0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.08)",
+              }}
+              initial={{ opacity: 0, scale: 0.92, y: 32 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 24 }}
+              exit={{ opacity: 0, scale: 0.92, y: 32 }}
               transition={{ duration: 0.22 }}
             >
               <button
                 onClick={() => setSelectedExp(null)}
-                className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/8 transition-colors"
+                className="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+                style={{ background: "rgba(0,212,255,0.06)", border: "1px solid rgba(0,212,255,0.1)" }}
               >
-                <X className="w-4 h-4 text-slate-400" />
+                <X className="w-4 h-4" style={{ color: "var(--text-2)" }} />
               </button>
-
-              <div className="flex items-center gap-1.5 text-xs text-cyan-500 font-medium mb-3">
+              <div className="flex items-center gap-2 text-xs mb-3" style={{ color: "var(--cyan)" }}>
                 <CalendarDays className="w-3.5 h-3.5" />
                 {selectedExp.date}
               </div>
-              <h3
-                className="text-xl font-bold text-slate-900 dark:text-white mb-1"
-                style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
-              >
+              <h3 className="text-xl font-bold mb-1" style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}>
                 {selectedExp.role}
               </h3>
-              <p className="text-sm font-semibold text-amber-500 mb-5">
+              <p className="text-sm font-semibold mb-5" style={{ color: "var(--gold)" }}>
                 {selectedExp.company}
               </p>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
                 {selectedExp.fullDesc}
               </p>
             </motion.div>

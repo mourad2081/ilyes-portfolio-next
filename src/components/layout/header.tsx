@@ -1,33 +1,19 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useTheme } from "next-themes";
 import { useLanguage } from "@/hooks/use-language";
 import { personalInfo } from "@/lib/data";
 import type { Lang } from "@/lib/translations";
-import {
-  Sun,
-  Moon,
-  ChevronDown,
-  Menu,
-  X,
-  User,
-  Briefcase,
-  FileText,
-  FolderOpen,
-  Star,
-  Database,
-  Mail,
-} from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
 const navItems = [
-  { key: "nav_about", href: "#about", icon: User },
-  { key: "nav_services", href: "#services", icon: Briefcase },
-  { key: "nav_resume", href: "#resume", icon: FileText },
-  { key: "nav_projects", href: "#projects", icon: FolderOpen },
-  { key: "nav_achievements", href: "#achievements", icon: Star },
-  { key: "nav_resources", href: "#resources", icon: Database },
-  { key: "nav_contact", href: "#contact", icon: Mail },
+  { key: "nav_about", href: "#about" },
+  { key: "nav_services", href: "#services" },
+  { key: "nav_resume", href: "#resume" },
+  { key: "nav_projects", href: "#projects" },
+  { key: "nav_achievements", href: "#achievements" },
+  { key: "nav_resources", href: "#resources" },
+  { key: "nav_contact", href: "#contact" },
 ];
 
 const languages: { code: Lang; label: string; flag: string }[] = [
@@ -37,142 +23,135 @@ const languages: { code: Lang; label: string; flag: string }[] = [
 ];
 
 export default function Header() {
-  const { theme, setTheme } = useTheme();
   const { lang, setLang, t } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => setMounted(true), []);
-
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) {
-        setLangOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    const fn = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+    };
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
   }, []);
 
   const currentLang = languages.find((l) => l.code === lang);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 dark:bg-[#050c18]/90 backdrop-blur-lg border-b border-black/5 dark:border-white/5 shadow-sm"
-          : "bg-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        background: scrolled ? "rgba(3,7,18,0.92)" : "transparent",
+        backdropFilter: scrolled ? "blur(20px)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(0,212,255,0.06)" : "1px solid transparent",
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo mark */}
+
+          {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
             <div className="relative w-9 h-9">
-              {/* Outer ring */}
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 opacity-20 group-hover:opacity-40 transition-opacity" />
-              {/* Inner */}
-              <div className="absolute inset-[2px] rounded-md bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                <span
-                  className="text-white text-xs font-bold tracking-wider"
-                  style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
-                >
-                  {personalInfo.initials}
-                </span>
+              <div
+                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ background: "rgba(0,212,255,0.15)", filter: "blur(8px)" }}
+              />
+              <div
+                className="absolute inset-0 rounded-lg flex items-center justify-center text-white text-xs font-bold"
+                style={{
+                  background: "linear-gradient(135deg, rgba(0,212,255,0.2), rgba(0,212,255,0.08))",
+                  border: "1px solid rgba(0,212,255,0.2)",
+                  fontFamily: "var(--font-display)",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {personalInfo.initials}
               </div>
             </div>
-            <div className="flex flex-col leading-none">
-              <span
-                className="text-base font-bold text-slate-900 dark:text-white group-hover:text-cyan-500 transition-colors"
-                style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
+            <div>
+              <div
+                className="text-sm font-bold leading-none"
+                style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.08em" }}
               >
-                Ilyes
-              </span>
-              <span className="text-[9px] font-medium text-cyan-500 tracking-[0.2em] uppercase">
-                Boudissa
-              </span>
+                ILYES
+              </div>
+              <div className="text-[9px] leading-none tracking-[0.2em] uppercase" style={{ color: "var(--cyan)" }}>
+                BOUDISSA
+              </div>
             </div>
           </a>
 
-          {/* Desktop Nav */}
+          {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-0.5">
             {navItems.map((item) => (
               <a
                 key={item.key}
                 href={item.href}
-                className="relative px-3 py-2 text-[13px] font-medium text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors group"
+                className="relative px-3 py-2 text-xs font-medium uppercase tracking-[0.12em] transition-colors group"
+                style={{ color: "var(--text-2)", fontFamily: "var(--font-body)" }}
               >
-                {t(item.key)}
-                <span className="absolute bottom-0 left-3 right-3 h-[1.5px] bg-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full" />
+                <span className="group-hover:text-white transition-colors">{t(item.key)}</span>
+                <span
+                  className="absolute bottom-0 left-3 right-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"
+                  style={{ background: "var(--cyan)" }}
+                />
               </a>
             ))}
           </nav>
 
-          {/* Right Controls */}
+          {/* Right controls */}
           <div className="flex items-center gap-1">
-            {/* Theme Toggle */}
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/8 transition-all"
-              aria-label="Toggle theme"
-            >
-              {mounted && (
-                theme === "dark" ? (
-                  <Sun className="w-4 h-4" />
-                ) : (
-                  <Moon className="w-4 h-4" />
-                )
-              )}
-            </button>
-
-            {/* Language Dropdown */}
+            {/* Language */}
             <div ref={langRef} className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-2 text-[13px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/8 rounded-lg transition-all"
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition-colors"
+                style={{ color: "var(--text-2)", fontFamily: "var(--font-body)" }}
               >
                 <span>{currentLang?.flag}</span>
                 <span>{currentLang?.label}</span>
-                <ChevronDown
-                  className={`w-3 h-3 transition-transform ${langOpen ? "rotate-180" : ""}`}
-                />
+                <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? "rotate-180" : ""}`} />
               </button>
               {langOpen && (
-                <div className="absolute right-0 mt-2 w-28 rounded-xl bg-white dark:bg-[#0d1829] shadow-xl border border-black/8 dark:border-white/8 overflow-hidden">
+                <div
+                  className="absolute right-0 mt-2 w-28 rounded-xl overflow-hidden z-50"
+                  style={{
+                    background: "var(--bg-card-2)",
+                    border: "1px solid rgba(0,212,255,0.12)",
+                    boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
+                  }}
+                >
                   {languages.map((l) => (
                     <button
                       key={l.code}
-                      onClick={() => {
-                        setLang(l.code);
-                        setLangOpen(false);
+                      onClick={() => { setLang(l.code); setLangOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left transition-colors"
+                      style={{
+                        color: lang === l.code ? "var(--cyan)" : "var(--text-2)",
+                        background: lang === l.code ? "rgba(0,212,255,0.06)" : "transparent",
+                        fontFamily: "var(--font-body)",
                       }}
-                      className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-[13px] text-left transition-colors hover:bg-cyan-50 dark:hover:bg-cyan-500/10 ${
-                        lang === l.code
-                          ? "text-cyan-500 font-semibold"
-                          : "text-slate-600 dark:text-slate-300"
-                      }`}
                     >
-                      <span>{l.flag}</span>
-                      {l.label}
+                      <span>{l.flag}</span> {l.label}
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Mobile Hamburger */}
+            {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/8 transition-all"
+              className="lg:hidden p-2 rounded-lg transition-colors"
+              style={{ color: "var(--text-2)" }}
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -181,24 +160,31 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-white/98 dark:bg-[#050c18]/98 backdrop-blur-xl border-t border-black/5 dark:border-white/5">
-          <nav className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-0.5">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <a
-                  key={item.key}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-500/8 rounded-xl transition-all"
-                >
-                  <Icon className="w-4 h-4 text-cyan-500" />
-                  {t(item.key)}
-                </a>
-              );
-            })}
+        <div
+          className="lg:hidden border-t"
+          style={{
+            background: "rgba(3,7,18,0.97)",
+            backdropFilter: "blur(20px)",
+            borderColor: "rgba(0,212,255,0.06)",
+          }}
+        >
+          <nav className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-0.5">
+            {navItems.map((item) => (
+              <a
+                key={item.key}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className="px-4 py-3 text-sm font-medium rounded-xl transition-colors"
+                style={{
+                  color: "var(--text-2)",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                {t(item.key)}
+              </a>
+            ))}
           </nav>
         </div>
       )}

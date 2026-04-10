@@ -5,17 +5,14 @@ import { motion, useInView } from "framer-motion";
 import { Search, Users, Zap, type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { services } from "@/lib/data";
+import TiltCard from "@/components/ui/tilt-card";
 
-const iconMap: Record<string, LucideIcon> = {
-  Search,
-  Users,
-  Zap,
-};
+const iconMap: Record<string, LucideIcon> = { Search, Users, Zap };
 
-const accentColors = [
-  { border: "#06b6d4", glow: "rgba(6, 182, 212, 0.15)", icon: "rgba(6, 182, 212, 0.1)", text: "#06b6d4" },
-  { border: "#f59e0b", glow: "rgba(245, 158, 11, 0.15)", icon: "rgba(245, 158, 11, 0.1)", text: "#f59e0b" },
-  { border: "#06b6d4", glow: "rgba(6, 182, 212, 0.15)", icon: "rgba(6, 182, 212, 0.1)", text: "#06b6d4" },
+const accents = [
+  { line: "var(--cyan)", glow: "var(--cyan-glow)", label: "#00d4ff", num: "01" },
+  { line: "var(--gold)", glow: "var(--gold-glow)", label: "#e8a020", num: "02" },
+  { line: "var(--cyan)", glow: "var(--cyan-glow)", label: "#00d4ff", num: "03" },
 ];
 
 export default function ServicesSection() {
@@ -24,74 +21,79 @@ export default function ServicesSection() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="services" className="py-24 px-4">
-      <div className="max-w-6xl mx-auto" ref={ref}>
+    <section id="services" className="py-28 px-4 relative" style={{ background: "var(--bg)" }}>
+      {/* Background glow */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden
+        style={{ background: "radial-gradient(ellipse 60% 40% at 20% 60%, rgba(0,100,180,0.05) 0%, transparent 70%)" }}
+      />
+
+      <div className="max-w-6xl mx-auto relative" ref={ref}>
         {/* Section header */}
         <motion.div
-          className="mb-16 relative"
-          initial={{ opacity: 0, y: 20 }}
+          className="mb-20 relative"
+          initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
         >
-          <span
-            className="absolute -top-6 right-0 section-number"
-            aria-hidden
-          >
-            01
-          </span>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-[2px] bg-cyan-500 rounded" />
-            <span className="text-xs font-semibold text-cyan-500 uppercase tracking-[0.2em]">
+          <span className="section-num">01</span>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-[1.5px]" style={{ background: "linear-gradient(90deg, var(--cyan), transparent)" }} />
+            <span className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--cyan)" }}>
               {t("services_subtitle")}
             </span>
           </div>
-          <h2
-            className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white"
-            style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
-          >
+          <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}>
             {t("services_title")}
           </h2>
+          <div className="divider-glow mt-6 max-w-xs" />
         </motion.div>
 
-        {/* Cards grid */}
+        {/* 3D tilt cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {services.map((service, i) => {
             const Icon = iconMap[service.icon] ?? Search;
-            const accent = accentColors[i % accentColors.length];
+            const accent = accents[i % accents.length];
             return (
               <motion.div
                 key={service.id}
-                className="premium-card p-7 group"
-                style={{ borderLeft: `3px solid ${accent.border}` }}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.55, delay: 0.12 * i }}
+                transition={{ duration: 0.6, delay: 0.1 * i }}
               >
-                {/* Icon */}
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110"
-                  style={{ background: accent.icon }}
+                <TiltCard
+                  className="card-dark rounded-2xl p-8 h-full"
+                  intensity={8}
+                  style={{ borderLeft: `2px solid ${accent.line}` } as React.CSSProperties}
                 >
-                  <Icon className="w-5 h-5" style={{ color: accent.text }} />
-                </div>
+                  {/* Inner glow on hover corner */}
+                  <div
+                    className="absolute top-0 left-0 w-20 h-20 rounded-2xl opacity-20 pointer-events-none"
+                    style={{ background: `radial-gradient(circle at top left, ${accent.line}, transparent)` }}
+                  />
 
-                {/* Number */}
-                <div
-                  className="text-xs font-bold mb-2 tracking-widest"
-                  style={{ color: accent.text, fontFamily: "var(--font-syne, Syne, sans-serif)" }}
-                >
-                  0{i + 1}
-                </div>
+                  {/* Icon */}
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 relative"
+                    style={{ background: `rgba(${accent.label === "#00d4ff" ? "0,212,255" : "232,160,32"},0.08)`, border: `1px solid ${accent.line}22` }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: accent.line }} />
+                  </div>
 
-                <h3
-                  className="text-base font-bold text-slate-900 dark:text-white mb-2 group-hover:text-cyan-500 transition-colors"
-                  style={{ fontFamily: "var(--font-syne, Syne, sans-serif)" }}
-                >
-                  {service.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-                  {service.desc}
-                </p>
+                  {/* Number */}
+                  <div className="text-[10px] font-bold tracking-[0.3em] mb-3" style={{ color: accent.line, fontFamily: "var(--font-body)" }}>
+                    {accent.num}
+                  </div>
+
+                  <h3
+                    className="text-lg font-bold mb-3"
+                    style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.03em" }}
+                  >
+                    {service.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
+                    {service.desc}
+                  </p>
+                </TiltCard>
               </motion.div>
             );
           })}
