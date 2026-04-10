@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useLanguage } from "@/hooks/use-language";
 import { tools, competencies } from "@/lib/data";
+import ToolLogo from "@/components/ui/tool-logo";
 
 const compKeys: Record<string, string> = {
   Negotiation: "comp_negot",
@@ -69,7 +70,9 @@ export default function ToolsSection() {
               >
                 {/* Shine overlay */}
                 <div className="absolute inset-0 rounded-2xl opacity-30" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 60%)" }} />
-                <span className="relative z-10">{tool.name.charAt(0)}</span>
+                <span className="relative z-10 flex items-center justify-center">
+                  <ToolLogo logo={tool.logo} color={tool.color} size={26} />
+                </span>
               </motion.div>
               <p
                 className="text-sm font-semibold group-hover:text-gradient-cyan transition-colors"

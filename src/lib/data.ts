@@ -22,6 +22,8 @@ export interface Experience {
   id: string;
   role: string;
   company: string;
+  companyColor?: string;
+  companyIcon?: string;
   date: string;
   shortDesc: string;
   fullDesc: string;
@@ -32,6 +34,8 @@ export const experiences: Experience[] = [
     id: "fanin",
     role: "Procurement & Sourcing Specialist",
     company: "Fanin Technology",
+    companyColor: "#0FAAFF",
+    companyIcon: "💡",
     date: "Apr 2024 – Present",
     shortDesc: "Strategic sourcing and P2P optimization utilizing AI analytics.",
     fullDesc:
@@ -41,6 +45,8 @@ export const experiences: Experience[] = [
     id: "engcb-pm",
     role: "Procurement Project Manager",
     company: "ENGCB",
+    companyColor: "#e8a020",
+    companyIcon: "🏗️",
     date: "Oct 2023 – Mar 2024",
     shortDesc: "Full-cycle procurement leadership for $100M+ EPC projects.",
     fullDesc:
@@ -50,6 +56,8 @@ export const experiences: Experience[] = [
     id: "engcb-spec",
     role: "Procurement Specialist",
     company: "ENGCB",
+    companyColor: "#e8a020",
+    companyIcon: "🏗️",
     date: "Oct 2020 – Sep 2023",
     shortDesc: "Supplier relationship management and quality compliance for technical packages.",
     fullDesc:
@@ -59,6 +67,8 @@ export const experiences: Experience[] = [
     id: "gnosis",
     role: "Admin & Procurement Coordinator",
     company: "Gnosis IT",
+    companyColor: "#a855f7",
+    companyIcon: "💻",
     date: "Jan 2020 – Sep 2020",
     shortDesc: "Administrative coordination and vendor management for IT operations.",
     fullDesc:
@@ -109,10 +119,18 @@ export const competencies = [
 ];
 
 export const tools = [
-  { name: "SAP", color: "#0FAAFF" },
-  { name: "MS Office", color: "#D83B01" },
-  { name: "Google Tools", color: "#34A853" },
-  { name: "AI / ChatGPT", color: "#10A37F" },
+  { name: "SAP S/4HANA", color: "#0FAAFF", logo: "sap" },
+  { name: "SAP Ariba", color: "#0070D2", logo: "ariba" },
+  { name: "MS Excel", color: "#217346", logo: "excel" },
+  { name: "Power BI", color: "#F2C811", logo: "powerbi" },
+  { name: "MS Teams", color: "#6264A7", logo: "teams" },
+  { name: "MS Outlook", color: "#0078D4", logo: "outlook" },
+  { name: "Google Sheets", color: "#34A853", logo: "gsheets" },
+  { name: "Google Drive", color: "#4285F4", logo: "gdrive" },
+  { name: "ChatGPT", color: "#10A37F", logo: "openai" },
+  { name: "MS Office", color: "#D83B01", logo: "office" },
+  { name: "Zoom", color: "#2D8CFF", logo: "zoom" },
+  { name: "Tableau", color: "#E97627", logo: "tableau" },
 ];
 
 export interface Project {

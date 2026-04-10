@@ -109,14 +109,14 @@ export default function ResumeSection() {
                         className="absolute -left-10 top-5 w-3.5 h-3.5 rounded-full"
                         style={{
                           background: "var(--bg)",
-                          border: "2px solid var(--cyan)",
-                          boxShadow: "0 0 0 3px rgba(0,212,255,0.1)",
+                          border: `2px solid ${exp.companyColor || "var(--cyan)"}`,
+                          boxShadow: `0 0 0 3px ${exp.companyColor ? exp.companyColor + "22" : "rgba(0,212,255,0.1)"}`,
                         }}
                       />
 
                       <div
-                        className="card-dark rounded-2xl p-6 group-hover:border-cyan-500/20 transition-all"
-                        style={{ borderLeft: "2px solid rgba(0,212,255,0.2)" }}
+                        className="card-dark rounded-2xl p-6 transition-all"
+                        style={{ borderLeft: `2px solid ${exp.companyColor ? exp.companyColor + "55" : "rgba(0,212,255,0.2)"}` }}
                       >
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2 text-xs font-medium" style={{ color: "var(--cyan)" }}>
@@ -132,16 +132,31 @@ export default function ResumeSection() {
                           </button>
                         </div>
 
-                        <h3
-                          className="text-base font-bold mb-1"
-                          style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}
-                        >
-                          {exp.role}
-                        </h3>
-                        <p className="text-sm font-medium mb-3" style={{ color: "var(--gold)" }}>
-                          {exp.company}
-                        </p>
-                        <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
+                        <div className="flex items-start gap-3 mb-2">
+                          {exp.companyIcon && (
+                            <div
+                              className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0"
+                              style={{
+                                background: exp.companyColor ? `${exp.companyColor}18` : "rgba(0,212,255,0.08)",
+                                border: `1px solid ${exp.companyColor ? exp.companyColor + "30" : "rgba(0,212,255,0.12)"}`,
+                              }}
+                            >
+                              {exp.companyIcon}
+                            </div>
+                          )}
+                          <div>
+                            <h3
+                              className="text-base font-bold mb-0.5"
+                              style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}
+                            >
+                              {exp.role}
+                            </h3>
+                            <p className="text-sm font-semibold" style={{ color: exp.companyColor || "var(--gold)" }}>
+                              {exp.company}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="text-sm leading-relaxed mt-3" style={{ color: "var(--text-2)" }}>
                           {exp.shortDesc}
                         </p>
                       </div>
@@ -227,16 +242,31 @@ export default function ResumeSection() {
               >
                 <X className="w-4 h-4" style={{ color: "var(--text-2)" }} />
               </button>
-              <div className="flex items-center gap-2 text-xs mb-3" style={{ color: "var(--cyan)" }}>
+              <div className="flex items-center gap-2 text-xs mb-4" style={{ color: "var(--cyan)" }}>
                 <CalendarDays className="w-3.5 h-3.5" />
                 {selectedExp.date}
               </div>
-              <h3 className="text-xl font-bold mb-1" style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}>
-                {selectedExp.role}
-              </h3>
-              <p className="text-sm font-semibold mb-5" style={{ color: "var(--gold)" }}>
-                {selectedExp.company}
-              </p>
+              <div className="flex items-start gap-3 mb-5">
+                {selectedExp.companyIcon && (
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0"
+                    style={{
+                      background: selectedExp.companyColor ? `${selectedExp.companyColor}18` : "rgba(0,212,255,0.08)",
+                      border: `1px solid ${selectedExp.companyColor ? selectedExp.companyColor + "30" : "rgba(0,212,255,0.12)"}`,
+                    }}
+                  >
+                    {selectedExp.companyIcon}
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-xl font-bold mb-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--text)", letterSpacing: "0.02em" }}>
+                    {selectedExp.role}
+                  </h3>
+                  <p className="text-sm font-semibold" style={{ color: selectedExp.companyColor || "var(--gold)" }}>
+                    {selectedExp.company}
+                  </p>
+                </div>
+              </div>
               <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
                 {selectedExp.fullDesc}
               </p>

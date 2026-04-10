@@ -4,16 +4,16 @@ import { useState, useRef, useEffect } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { personalInfo } from "@/lib/data";
 import type { Lang } from "@/lib/translations";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, User, Wrench, FileText, FolderKanban, Trophy, BookMarked, Mail } from "lucide-react";
 
 const navItems = [
-  { key: "nav_about", href: "#about" },
-  { key: "nav_services", href: "#services" },
-  { key: "nav_resume", href: "#resume" },
-  { key: "nav_projects", href: "#projects" },
-  { key: "nav_achievements", href: "#achievements" },
-  { key: "nav_resources", href: "#resources" },
-  { key: "nav_contact", href: "#contact" },
+  { key: "nav_about", href: "#about", icon: User },
+  { key: "nav_services", href: "#services", icon: Wrench },
+  { key: "nav_resume", href: "#resume", icon: FileText },
+  { key: "nav_projects", href: "#projects", icon: FolderKanban },
+  { key: "nav_achievements", href: "#achievements", icon: Trophy },
+  { key: "nav_resources", href: "#resources", icon: BookMarked },
+  { key: "nav_contact", href: "#contact", icon: Mail },
 ];
 
 const languages: { code: Lang; label: string; flag: string }[] = [
@@ -91,20 +91,24 @@ export default function Header() {
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-0.5">
-            {navItems.map((item) => (
-              <a
-                key={item.key}
-                href={item.href}
-                className="relative px-3 py-2 text-xs font-medium uppercase tracking-[0.12em] transition-colors group"
-                style={{ color: "var(--text-2)", fontFamily: "var(--font-body)" }}
-              >
-                <span className="group-hover:text-white transition-colors">{t(item.key)}</span>
-                <span
-                  className="absolute bottom-0 left-3 right-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"
-                  style={{ background: "var(--cyan)" }}
-                />
-              </a>
-            ))}
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.key}
+                  href={item.href}
+                  className="relative flex items-center gap-1.5 px-3 py-2 text-xs font-medium uppercase tracking-[0.12em] transition-colors group"
+                  style={{ color: "var(--text-2)", fontFamily: "var(--font-body)" }}
+                >
+                  <Icon className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+                  <span className="group-hover:text-white transition-colors">{t(item.key)}</span>
+                  <span
+                    className="absolute bottom-0 left-3 right-3 h-px scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"
+                    style={{ background: "var(--cyan)" }}
+                  />
+                </a>
+              );
+            })}
           </nav>
 
           {/* Right controls */}
@@ -171,20 +175,24 @@ export default function Header() {
           }}
         >
           <nav className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-0.5">
-            {navItems.map((item) => (
-              <a
-                key={item.key}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="px-4 py-3 text-sm font-medium rounded-xl transition-colors"
-                style={{
-                  color: "var(--text-2)",
-                  fontFamily: "var(--font-body)",
-                }}
-              >
-                {t(item.key)}
-              </a>
-            ))}
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.key}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-colors"
+                  style={{
+                    color: "var(--text-2)",
+                    fontFamily: "var(--font-body)",
+                  }}
+                >
+                  <Icon className="w-4 h-4 opacity-50" />
+                  {t(item.key)}
+                </a>
+              );
+            })}
           </nav>
         </div>
       )}
